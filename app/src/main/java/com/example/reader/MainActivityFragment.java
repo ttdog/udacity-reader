@@ -21,9 +21,10 @@ public class MainActivityFragment extends Fragment {
 
     public MainActivityFragment() {
     }
-    private static final String[] sourceTitles = {"はてな", "BBBB", "cccccc", "DDDDDD", "EEEEE", "FFFFF", "GGGGGG", "HHHHHH"};
-    private static final String[] sourceUrls = {"http://b.hatena.ne.jp/hotentry.rss", "http://BBBB", "http://cccccc", "http://DDDDDD", "http://EEEEE", "http://FFFFF", "http://GGGGGG", "http://HHHHHH"};
-
+//    private static final String[] sourceTitles = {"はてな", "BBBB", "cccccc", "DDDDDD", "EEEEE", "FFFFF", "GGGGGG", "HHHHHH"};
+//    private static final String[] sourceUrls = {"http://b.hatena.ne.jp/hotentry.rss", "http://BBBB", "http://cccccc", "http://DDDDDD", "http://EEEEE", "http://FFFFF", "http://GGGGGG", "http://HHHHHH"};
+    private static final String[] sourceTitles = {"はてな"};
+    private static final String[] sourceUrls = {"http://b.hatena.ne.jp/hotentry.rss"};
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
