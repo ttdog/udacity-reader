@@ -1,6 +1,8 @@
 package com.example.reader.data;
 
 import android.content.ContentResolver;
+import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
@@ -22,6 +24,11 @@ public class NewsContract {
         public static final String COLUMN_UPDATED_AT = "updatedAt";
         public static final String COLUMN_SOURCE_ID = "sourceId";
 
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_NEWS).build();
+        public static final Uri CONTENT_WITH_SOURCE_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_NEWS).appendPath(PATH_NEWS_SOURCE).build();
+
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_NEWS;
         public static final String CONTENT_TYPE =
@@ -41,6 +48,14 @@ public class NewsContract {
         public static final String TABLE_NAME = "newsSource";
         public static final String COLUMN_URL = "url";
         public static final String COLUMN_TITLE = "title";
+        public static final String COLUMN_USE = "use";
+        public static final String COLUMN_IS_DEFAULT = "isDefault";
+
+        public static final String[] sourceTitles = {"はてな", "BBBB", "cccccc", "DDDDDD", "EEEEE", "FFFFF", "GGGGGG", "HHHHHH"};
+        public static final String[] sourceUrls = {"http://b.hatena.ne.jp/hotentry.rss", "http://BBBB", "http://cccccc", "http://DDDDDD", "http://EEEEE", "http://FFFFF", "http://GGGGGG", "http://HHHHHH"};
+
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_NEWS_SOURCE).build();
 
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_NEWS_SOURCE;
@@ -56,5 +71,15 @@ public class NewsContract {
 //        public static long getDateFromUri(Uri uri) {
 //            return Long.parseLong(uri.getPathSegments().get(2));
 //        }
+
+        public static Cursor getAllRssSources(Context context){
+            return context.getContentResolver().query(
+                    NewsContract.NewsSourceEntry.CONTENT_URI,
+                    null,
+                    NewsContract.NewsSourceEntry.COLUMN_USE + " = ?",
+                    new String[]{"1"},
+                    NewsContract.NewsSourceEntry._ID + " ASC"
+            );
+        }
     }
 }

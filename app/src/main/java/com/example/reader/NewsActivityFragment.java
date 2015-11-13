@@ -1,6 +1,7 @@
 package com.example.reader;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -13,6 +14,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.reader.data.NewsContract;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -24,23 +27,33 @@ public class NewsActivityFragment extends Fragment {
     public NewsActivityFragment() {
     }
 
-//    private static final String[] sourceTitles = {"aaaa", "bbb", "cccccc", "DDDDDD", "EEEEE", "FFFFF", "GGGGGG", "HHHHHH"};
-//    private static final String[] sourceUrls = {"bbbb", "http://BBBB", "http://cccccc", "http://DDDDDD", "http://EEEEE", "http://FFFFF", "http://GGGGGG", "http://HHHHHH"};
+    private NewsAdapter adapter;
 
-    private ArrayAdapter adapter;
+    private long mNewsSourceId;
+    private String mUrl;
+    private String mTitle;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        Intent intent = getActivity().getIntent();
+        mUrl = intent.getStringExtra(NewsContract.NewsSourceEntry.COLUMN_URL);
+        mTitle = intent.getStringExtra(NewsContract.NewsSourceEntry.COLUMN_TITLE);
+        mNewsSourceId = intent.getLongExtra(NewsContract.NewsSourceEntry._ID, 0);
+
+        Log.v("aaa", "url: " + mUrl + ", title: " + mTitle + ", id: " + mNewsSourceId);
+
         View rootView = inflater.inflate(R.layout.fragment_news, container, false);
 
-        ArrayList<String> items = new ArrayList<String>(Arrays.asList("ダウンタウン", "バナナマン", "オードリー"));
+        Cursor cursor = getActivity().getContentResolver().query(NewsContract.NewsEntry.CONTENT_WITH_SOURCE_URI.buildUpon().appendPath(String.valueOf(mNewsSourceId)).build(), null, null, null, null);
 
-        adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, items);
+        adapter = new NewsAdapter(getActivity(), cursor, 1);
+//        ArrayList<String> items = new ArrayList<String>(Arrays.asList("ダウンタウン", "バナナマン", "オードリー"));
+
+//        adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, items);
 //        NewsSourceAdapter adapter = new NewsSourceAdapter(getActivity(), sourceTitles, sourceUrls);
         final ListView listView = (ListView)rootView.findViewById(R.id.listview_news_list);
-
 
         listView.setAdapter(adapter);
 
@@ -65,6 +78,6 @@ public class NewsActivityFragment extends Fragment {
 
     private void updateNews(){
         FetchNewsTask fetchTask = new FetchNewsTask(getActivity(), adapter);
-        fetchTask.execute("http://b.hatena.ne.jp/hotentry.rss");
+        fetchTask.execute(mUrl, String.valueOf(mNewsSourceId));
     }
 }

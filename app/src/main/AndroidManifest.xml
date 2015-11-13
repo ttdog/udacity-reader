@@ -29,8 +29,22 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.reader.MainActivity" />
         </activity>
+
+        <provider
+            android:name=".data.NewsProvider"
+            android:authorities="com.example.reader"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.reader.MainActivity" />
+        </activity>
     </application>
-
-
 
 </manifest>

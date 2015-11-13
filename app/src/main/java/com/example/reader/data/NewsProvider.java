@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.util.Log;
 
 /**
  * Created by 01011549 on 15/11/05.
@@ -79,6 +80,7 @@ public class NewsProvider extends ContentProvider {
         return true;
     }
 
+    //MIME typeを返す
     @Override
     public String getType(Uri uri) {
 
@@ -185,6 +187,69 @@ public class NewsProvider extends ContentProvider {
         getContext().getContentResolver().notifyChange(uri, null);
         db.close();
         return returnUri;
+    }
+
+    @Override
+    public int bulkInsert(Uri uri, ContentValues[] values) {
+        final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        final int match = sUriMatcher.match(uri);
+        int returnCount = 0;
+
+        switch (match) {
+            case NEWS:
+                db.beginTransaction();
+
+                try {
+                    for (ContentValues value : values) {
+                        long _id = db.insert(NewsContract.NewsEntry.TABLE_NAME, null, value);
+                        if (_id != -1) {
+                            returnCount++;
+                        }
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+                getContext().getContentResolver().notifyChange(uri, null);
+                return returnCount;
+            case NEWS_WITH_NEWS_SOURCE:
+                db.beginTransaction();
+
+                try{
+                    String sourceId = uri.getPathSegments().get(2);
+
+                    for(ContentValues value : values){
+                        Cursor cur = db.query(NewsContract.NewsEntry.TABLE_NAME,
+                                null,
+                                NewsContract.NewsEntry.COLUMN_SOURCE_ID + " = ? AND " + NewsContract.NewsEntry.COLUMN_LINK + " = ?",
+                                new String[]{sourceId, (String) value.get(NewsContract.NewsEntry.COLUMN_LINK)},
+                                null,
+                                null,
+                                null
+                        );
+                        if(cur != null && cur.getCount() > 0) {
+                            cur.moveToFirst();
+                            db.update(NewsContract.NewsEntry.TABLE_NAME,
+                                    value,
+                                    NewsContract.NewsEntry._ID + " = ?",
+                                    new String[]{String.valueOf(cur.getLong(cur.getColumnIndex(NewsContract.NewsEntry._ID)))});
+                        }
+                        else{
+                            long _id = db.insert(NewsContract.NewsEntry.TABLE_NAME, null, value);
+                            if(_id != -1){
+                                ++returnCount;
+                            }
+                        }
+                    }
+                    db.setTransactionSuccessful();
+                }finally {
+                    db.endTransaction();
+                }
+
+                return returnCount;
+            default:
+                return super.bulkInsert(uri, values);
+        }
     }
 
     @Override

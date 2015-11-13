@@ -25,8 +25,18 @@ public class NewsSourceAdapter extends BaseAdapter {
     }
 
     public NewsSourceAdapter(Context context, String[] titles, String[] urls){
+        this(context);
+
+        this.titles = titles;
+        this.urls = urls;
+    }
+
+    public NewsSourceAdapter(Context context){
         this.context = context;
         mInflater = LayoutInflater.from(context);
+    }
+
+    public void setData(String[] titles, String[] urls){
         this.titles = titles;
         this.urls = urls;
     }
