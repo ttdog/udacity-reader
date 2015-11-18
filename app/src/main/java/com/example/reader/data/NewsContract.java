@@ -51,8 +51,22 @@ public class NewsContract {
         public static final String COLUMN_USE = "use";
         public static final String COLUMN_IS_DEFAULT = "isDefault";
 
-        public static final String[] sourceTitles = {"はてな", "BBBB", "cccccc", "DDDDDD", "EEEEE", "FFFFF", "GGGGGG", "HHHHHH"};
-        public static final String[] sourceUrls = {"http://b.hatena.ne.jp/hotentry.rss", "http://BBBB", "http://cccccc", "http://DDDDDD", "http://EEEEE", "http://FFFFF", "http://GGGGGG", "http://HHHHHH"};
+        public static final String[] sourceTitles = {"はてな",
+                "ライフハッカー",
+                "ギズモード・ジャパン",
+                "All About",
+                "GIGAZINE",
+                "MarkeZine",
+                "世界ろぐ | 「あ、面白そうをギュっと集める」",
+                "男子ハック"};
+        public static final String[] sourceUrls = {"http://b.hatena.ne.jp/hotentry.rss",
+                "http://feeds.lifehacker.jp/rss/lifehacker/index.xml",
+                "http://feeds.gizmodo.jp/rss/gizmodo/index.xml",
+                "http://rss.allabout.co.jp/aa/ranking/",
+                "http://feed.rssad.jp/rss/gigazine/rss_2.0",
+                "http://rss.rssad.jp/rss/markezine/new/20/index.xml",
+                "http://sekailog.com/feed/",
+                "http://www.danshihack.com/feed"};
 
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_NEWS_SOURCE).build();
@@ -73,11 +87,18 @@ public class NewsContract {
 //        }
 
         public static Cursor getAllRssSources(Context context){
+//            return context.getContentResolver().query(
+//                    NewsContract.NewsSourceEntry.CONTENT_URI,
+//                    null,
+//                    NewsContract.NewsSourceEntry.COLUMN_USE + " = ?",
+//                    new String[]{"1"},
+//                    NewsContract.NewsSourceEntry._ID + " ASC"
+//            );
             return context.getContentResolver().query(
                     NewsContract.NewsSourceEntry.CONTENT_URI,
                     null,
-                    NewsContract.NewsSourceEntry.COLUMN_USE + " = ?",
-                    new String[]{"1"},
+                    "",
+                    new String[]{},
                     NewsContract.NewsSourceEntry._ID + " ASC"
             );
         }

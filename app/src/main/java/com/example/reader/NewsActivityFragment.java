@@ -40,7 +40,7 @@ public class NewsActivityFragment extends Fragment {
         Intent intent = getActivity().getIntent();
         mUrl = intent.getStringExtra(NewsContract.NewsSourceEntry.COLUMN_URL);
         mTitle = intent.getStringExtra(NewsContract.NewsSourceEntry.COLUMN_TITLE);
-        mNewsSourceId = intent.getLongExtra(NewsContract.NewsSourceEntry._ID, 0);
+        mNewsSourceId = Long.parseLong(intent.getStringExtra(NewsContract.NewsSourceEntry._ID));
 
         Log.v("aaa", "url: " + mUrl + ", title: " + mTitle + ", id: " + mNewsSourceId);
 

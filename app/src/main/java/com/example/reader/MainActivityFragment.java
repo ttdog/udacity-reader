@@ -82,6 +82,15 @@ public class MainActivityFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        mCursor = NewsContract.NewsSourceEntry.getAllRssSources(getActivity());
+        updateSourceList();
+//        String methodName = new Object(){}.getClass().getEnclosingMethod().getName();
+//        Log.d(TAG, methodName);
+        super.onResume();
+    }
+
     private Cursor getCursorIndex(int index){
         if(mCursor != null && mCursor.moveToPosition(index)){
             return mCursor;
@@ -95,10 +104,15 @@ public class MainActivityFragment extends Fragment {
             List<String> urls = new ArrayList<String>();
             int nameColumn = mCursor.getColumnIndex(NewsContract.NewsSourceEntry.COLUMN_TITLE);
             int phoneColumn = mCursor.getColumnIndex(NewsContract.NewsSourceEntry.COLUMN_URL);
+            int useColumn = mCursor.getColumnIndex(NewsContract.NewsSourceEntry.COLUMN_USE);
+
             int count = 0;
             do {
-                titles.add(mCursor.getString(nameColumn));
-                urls.add(mCursor.getString(phoneColumn));
+                Log.v("aaa", "isUse: " + String.valueOf(mCursor.getInt(useColumn)));
+                if(mCursor.getInt(useColumn) == 1){
+                    titles.add(mCursor.getString(nameColumn));
+                    urls.add(mCursor.getString(phoneColumn));
+                }
                 ++count;
             } while (mCursor.moveToNext());
 
