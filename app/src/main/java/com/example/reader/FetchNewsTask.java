@@ -76,6 +76,7 @@ public class FetchNewsTask extends AsyncTask<String, Void, Cursor>{
             }
 
             if(buffer.length() == 0){
+                Log.v("aaa", "0000");
                 return null;
             }
 

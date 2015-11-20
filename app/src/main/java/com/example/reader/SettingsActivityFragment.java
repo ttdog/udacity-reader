@@ -4,15 +4,20 @@ import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.preference.CheckBoxPreference;
+import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.PopupWindow;
 
 import com.example.reader.data.NewsContract;
 import com.example.reader.data.NewsProvider;
@@ -25,6 +30,7 @@ import java.util.List;
  */
 public class SettingsActivityFragment extends PreferenceFragment {
     private Cursor mCursor;
+    private PopupWindow mPopup;
 
     public SettingsActivityFragment() {
     }
@@ -33,34 +39,6 @@ public class SettingsActivityFragment extends PreferenceFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return super.onCreateView(inflater, container, savedInstanceState);
-//        View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
-//
-//        addPreferencesFromResource(R.xml.preference);
-
-//        Cursor cursor = NewsContract.NewsSourceEntry.getAllRssSources(getActivity());
-//        CheckBoxPreference checkBoxPreference;
-//        PreferenceScreen sc = getPreferenceScreen();
-//        PreferenceCategory cate = (PreferenceCategory)sc.getPreference(0);
-
-//        if (cursor != null && cursor.moveToFirst()) {
-//            int nameColumn = cursor.getColumnIndex(NewsContract.NewsSourceEntry.COLUMN_TITLE);
-//            int isUseColumn = cursor.getColumnIndex(NewsContract.NewsSourceEntry.COLUMN_USE);
-//            int count = 0;
-//            do {
-//                checkBoxPreference = new CheckBoxPreference(getActivity());
-//                checkBoxPreference.setTitle(cursor.getString(nameColumn));
-//                checkBoxPreference.setKey(String.valueOf(count));
-//
-//                if(cursor.getInt(isUseColumn) == 1){
-//                    checkBoxPreference.setChecked(true);
-//                }
-//
-//                Log.v("aaa", "abc");
-//                cate.addPreference(checkBoxPreference);
-//                ++count;
-//            } while (cursor.moveToNext());
-//        }
-//        return rootView;
     }
 
     @Override
@@ -72,6 +50,42 @@ public class SettingsActivityFragment extends PreferenceFragment {
         CheckBoxPreference checkBoxPreference;
         PreferenceScreen sc = getPreferenceScreen();
         PreferenceCategory cate = (PreferenceCategory)sc.getPreference(0);
+
+        //preferenceへのクリックイベントリスナの登録
+//        Preference preference = (Preference) findPreference("preference_key");
+//        preference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+//            public boolean onPreferenceClick(Preference preference) {
+//                Log.v("aaa", "click");
+////                Toast.makeText(getActivity(), "Preferenceクリック", Toast.LENGTH_SHORT).show();
+//
+//                mPopup = new PopupWindow(getActivity());
+//                View popupView = getActivity().getLayoutInflater().inflate(R.layout.popup_layout, null);
+//                popupView.findViewById(R.id.close_button).setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        if (mPopup.isShowing()) {
+//                            mPopup.dismiss();
+//                        }
+//                    }
+//                });
+//
+//                mPopup.setContentView(popupView);
+//
+////                popup.setBackgroundDrawable(getResources().getDrawable(R.drawable));
+//
+//                mPopup.setOutsideTouchable(true);
+//                mPopup.setFocusable(true);
+//
+//                float width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 300, getResources().getDisplayMetrics());
+//                mPopup.setWindowLayoutMode((int)width, WindowManager.LayoutParams.WRAP_CONTENT);
+//                mPopup.setWidth((int) width);
+//                mPopup.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+//
+//                mPopup.showAtLocation(getActivity().findViewById(R.id.close_button), Gravity.CENTER, 0, 0);
+//
+//                return true;
+//            }
+//        });
 
         if (mCursor != null && mCursor.moveToFirst()) {
             int nameColumn = mCursor.getColumnIndex(NewsContract.NewsSourceEntry.COLUMN_TITLE);

@@ -2,6 +2,7 @@ package com.example.reader;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,6 +33,13 @@ public class MainActivityFragment extends Fragment {
     static final int COL_NEWS_SOURCE_URL = 2;
     static final int COL_NEWS_SOURCE_USE = 3;
 
+    public interface Callback {
+        /**
+         * DetailFragmentCallback for when an item has been selected.
+         */
+        public void onItemSelected(String title, String url, Long id);
+    }
+
     public MainActivityFragment() {
     }
 
@@ -57,7 +65,7 @@ public class MainActivityFragment extends Fragment {
 
 //        adapter = new NewsSourceAdapter(getActivity(), NewsContract.NewsSourceEntry.sourceTitles, NewsContract.NewsSourceEntry.sourceUrls);
         adapter = new NewsSourceAdapter(getActivity());
-        updateSourceList();
+//        updateSourceList();
         final ListView listView = (ListView)rootView.findViewById(R.id.listview_top_news_header);
 
         listView.setAdapter(adapter);
@@ -69,12 +77,15 @@ public class MainActivityFragment extends Fragment {
                 Cursor cursor = getCursorIndex(position);
 
                 if(cursor != null){
-                    Intent intent = new Intent(getActivity(), NewsActivity.class)
-                            .putExtra(NewsContract.NewsSourceEntry.COLUMN_TITLE, mCursor.getString(COL_NEWS_SOURCE_TITLE))
-                            .putExtra(NewsContract.NewsSourceEntry.COLUMN_URL, mCursor.getString(COL_NEWS_SOURCE_URL))
-                            .putExtra(NewsContract.NewsSourceEntry._ID, mCursor.getString(COL_NEWS_SOURCE_ID));
-
-                    startActivity(intent);
+                    ((Callback)getActivity()).onItemSelected(mCursor.getString(COL_NEWS_SOURCE_TITLE),
+                            mCursor.getString(COL_NEWS_SOURCE_URL),
+                            Long.parseLong(mCursor.getString(COL_NEWS_SOURCE_ID)));
+//                    Intent intent = new Intent(getActivity(), NewsActivity.class)
+//                            .putExtra(NewsContract.NewsSourceEntry.COLUMN_TITLE, mCursor.getString(COL_NEWS_SOURCE_TITLE))
+//                            .putExtra(NewsContract.NewsSourceEntry.COLUMN_URL, mCursor.getString(COL_NEWS_SOURCE_URL))
+//                            .putExtra(NewsContract.NewsSourceEntry._ID, mCursor.getString(COL_NEWS_SOURCE_ID));
+//
+//                    startActivity(intent);
                 }
             }
         });

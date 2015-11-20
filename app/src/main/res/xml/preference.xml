@@ -3,4 +3,10 @@
     <PreferenceCategory
         android:title="@string/pref_title_label">
     </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_other_rss_label">
+        <Preference
+            android:key="preference_key"
+            android:title="Prefereceクリックのみ"
+            android:summary="Preferenceクリックで何かを処理したい" />
+    </PreferenceCategory>
 </PreferenceScreen>

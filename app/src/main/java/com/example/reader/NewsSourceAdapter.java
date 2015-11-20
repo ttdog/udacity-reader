@@ -43,7 +43,13 @@ public class NewsSourceAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return titles.length;
+        if(titles != null){
+            return titles.length;
+        }
+        else{
+            return 0;
+        }
+
     }
 
     @Override

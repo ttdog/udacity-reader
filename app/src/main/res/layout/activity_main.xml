@@ -17,9 +17,23 @@
 
     <include layout="@layout/content_main" />
 
-    <!--<android.support.design.widget.FloatingActionButton android:id="@+id/fab"-->
-        <!--android:layout_width="wrap_content" android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="bottom|end" android:layout_margin="@dimen/fab_margin"-->
-        <!--android:src="@android:drawable/ic_dialog_email" />-->
+
+    <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+        <!--xmlns:tools="http://schemas.android.com/tools"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:baselineAligned="false"-->
+        <!--android:divider="?android:attr/dividerHorizontal"-->
+        <!--android:orientation="horizontal">-->
+        <!--<include android:layout_width="0dip"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_weight="1" layout="@layout/content_main" />-->
+        <!--<include android:layout_width="0dip"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_weight="1" layout="@layout/content_news" />-->
+
+
+    <!--</LinearLayout>-->
+
 
 </android.support.design.widget.CoordinatorLayout>

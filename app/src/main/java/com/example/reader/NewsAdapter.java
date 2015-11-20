@@ -21,6 +21,7 @@ public class NewsAdapter extends CursorAdapter {
 
     public static class ViewHolder{
         public final TextView title;
+        public String url;
 
         public ViewHolder(View view){
             title = (TextView) view.findViewById(android.R.id.text1);
@@ -80,6 +81,7 @@ public class NewsAdapter extends CursorAdapter {
 
         View view = LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_1, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
+        viewHolder.url = cursor.getString(cursor.getColumnIndex(NewsContract.NewsEntry.COLUMN_LINK));
         view.setTag(viewHolder);
         return view;
 
