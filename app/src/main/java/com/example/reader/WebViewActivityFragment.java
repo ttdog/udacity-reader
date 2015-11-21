@@ -1,6 +1,8 @@
 package com.example.reader;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,12 +20,16 @@ import com.example.reader.data.NewsContract;
 public class WebViewActivityFragment extends Fragment {
 
     private WebView mWebView;
+    private FloatingActionButton mBackButton;
+    private FloatingActionButton mNextButton;
+    private MyWebViewClient mClient;
 
     public WebViewActivityFragment() {
     }
 
     public void setUrl(String url){
         mWebView.loadUrl(url);
+        mClient.doUpdateVisitedHistory(mWebView, url, false);
     }
 
     @Override
@@ -31,7 +37,31 @@ public class WebViewActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_web_view, container, false);
         mWebView = (WebView)rootView.findViewById(R.id.webView);
-        mWebView.setWebViewClient(new WebViewClient());
+        mClient = new MyWebViewClient();
+        mWebView.setWebViewClient(mClient);
+
+        mBackButton = (FloatingActionButton)rootView.findViewById(R.id.fab_back);
+        mBackButton.setEnabled(false);
+        mNextButton = (FloatingActionButton)rootView.findViewById(R.id.fab_next);
+        mNextButton.setEnabled(false);
+
+        mBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(mWebView.canGoBack()){
+                    mWebView.goBack();
+                }
+            }
+        });
+
+        mNextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(mWebView.canGoForward()){
+                    mWebView.goForward();
+                }
+            }
+        });
 
 //        Intent intent = getActivity().getIntent();
 //        String url = intent.getStringExtra(NewsContract.NewsEntry.COLUMN_LINK);
@@ -43,5 +73,35 @@ public class WebViewActivityFragment extends Fragment {
 //        }
 
         return rootView;
+    }
+
+    private class MyWebViewClient extends WebViewClient{
+        @Override
+        public void onPageStarted(WebView aView, String aUrl, Bitmap aFavicon) {
+            super.onPageStarted(aView, aUrl, aFavicon);
+
+            Log.v("aaa", "start :"+ mWebView.canGoBack());
+
+        }
+
+        @Override
+        public void onPageFinished(WebView aView, String aUrl) {
+            super.onPageFinished(aView, aUrl);
+            Log.v("aaa", "finish");
+
+            if(aView.canGoBack()){
+                mBackButton.setEnabled(true);
+            }
+            else{
+                mBackButton.setEnabled(false);
+            }
+
+            if(aView.canGoForward()){
+                mNextButton.setEnabled(true);
+            }
+            else{
+                mNextButton.setEnabled(false);
+            }
+        }
     }
 }

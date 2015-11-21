@@ -70,7 +70,6 @@ public class NewsActivityFragment extends Fragment {
 
         Bundle arguments = getArguments();
         if (arguments != null) {
-            Log.v("aaa", null);
             setDatas(arguments.getString(NewsContract.NewsSourceEntry.COLUMN_URL),
                     arguments.getString(NewsContract.NewsSourceEntry.COLUMN_TITLE),
                     Long.parseLong(arguments.getString(NewsContract.NewsSourceEntry._ID)));
