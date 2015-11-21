@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.PopupWindow;
+import android.widget.Toast;
 
 import com.example.reader.data.NewsContract;
 import com.example.reader.data.NewsProvider;
@@ -31,6 +32,8 @@ import java.util.List;
 public class SettingsActivityFragment extends PreferenceFragment {
     private Cursor mCursor;
     private PopupWindow mPopup;
+
+    private int checkCount;
 
     public SettingsActivityFragment() {
     }
@@ -98,6 +101,7 @@ public class SettingsActivityFragment extends PreferenceFragment {
 
                 if(mCursor.getInt(isUseColumn) == 1){
                     checkBoxPreference.setChecked(true);
+                    ++checkCount;
                 }
 
                 cate.addPreference(checkBoxPreference);
@@ -109,8 +113,6 @@ public class SettingsActivityFragment extends PreferenceFragment {
     private SharedPreferences.OnSharedPreferenceChangeListener onPreferenceChangeListenter = new SharedPreferences.OnSharedPreferenceChangeListener() {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            Log.v("aaa", "change: " + key);
-
             if (mCursor != null && mCursor.moveToFirst()) {
                 int idColumn = mCursor.getColumnIndex(NewsContract.NewsSourceEntry._ID);
                 int count = 0;
@@ -120,8 +122,15 @@ public class SettingsActivityFragment extends PreferenceFragment {
                         String isCheck;
                         if(pref.isChecked()){
                             isCheck = "1";
+                            ++checkCount;
                         }
                         else{
+                            --checkCount;
+                            //1つもチェックされていない時
+                            if(checkCount == 0){
+                                Toast.makeText(getActivity(), R.string.toast_message_must_check_1, Toast.LENGTH_SHORT).show();
+                            }
+
                             isCheck = "0";
                         }
 
@@ -133,28 +142,9 @@ public class SettingsActivityFragment extends PreferenceFragment {
                         getActivity().getContentResolver().update(NewsContract.NewsSourceEntry.CONTENT_URI, value, "_id = ?", new String[]{String.valueOf(id)});
                         break;
                     }
-//                    checkBoxPreference = new CheckBoxPreference(getActivity());
-//                    checkBoxPreference.setTitle(mCursor.getString(nameColumn));
-//                    checkBoxPreference.setKey(String.valueOf(count));
-//
-//                    if(mCursor.getInt(isUseColumn) == 1){
-//                        checkBoxPreference.setChecked(true);
-//                    }
-//
-//                    cate.addPreference(checkBoxPreference);
                     ++count;
                 } while (mCursor.moveToNext());
             }
-//            if (key.equals(PREF_KEY_USERNAME)) {
-//                EditTextPreference pref = (EditTextPreference)findPreference(key);
-//                pref.setSummary(pref.getText());
-//            } else if (key.equals(PREF_KEY_GENDER)) {
-//                ListPreference pref = (ListPreference)findPreference(key);
-//                pref.setSummary(pref.getEntry());
-//            } else if (key.equals(PREF_KEY_FAVORITED_COLORS)) {
-//                MultiSelectListPreference pref = (MultiSelectListPreference)findPreference(PREF_KEY_FAVORITED_COLORS);
-//                pref.setSummary(multiSelectListSummary(PREF_KEY_FAVORITED_COLORS));
-//            }
         }
     };
 

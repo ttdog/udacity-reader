@@ -60,7 +60,7 @@ public class MainActivityFragment extends Fragment {
 //                NewsContract.NewsSourceEntry._ID + " ASC"
 //        );
 
-        mCursor = NewsContract.NewsSourceEntry.getAllRssSources(getActivity());
+        mCursor = NewsContract.NewsSourceEntry.getAllActiveRssSources(getActivity());
 
 
 //        adapter = new NewsSourceAdapter(getActivity(), NewsContract.NewsSourceEntry.sourceTitles, NewsContract.NewsSourceEntry.sourceUrls);
@@ -77,15 +77,10 @@ public class MainActivityFragment extends Fragment {
                 Cursor cursor = getCursorIndex(position);
 
                 if(cursor != null){
-                    ((Callback)getActivity()).onItemSelected(mCursor.getString(COL_NEWS_SOURCE_TITLE),
+                    Log.v("aaa", "clicked: " + mCursor.getString(COL_NEWS_SOURCE_TITLE) + ", "+mCursor.getString(COL_NEWS_SOURCE_ID));
+                    ((Callback) getActivity()).onItemSelected(mCursor.getString(COL_NEWS_SOURCE_TITLE),
                             mCursor.getString(COL_NEWS_SOURCE_URL),
                             Long.parseLong(mCursor.getString(COL_NEWS_SOURCE_ID)));
-//                    Intent intent = new Intent(getActivity(), NewsActivity.class)
-//                            .putExtra(NewsContract.NewsSourceEntry.COLUMN_TITLE, mCursor.getString(COL_NEWS_SOURCE_TITLE))
-//                            .putExtra(NewsContract.NewsSourceEntry.COLUMN_URL, mCursor.getString(COL_NEWS_SOURCE_URL))
-//                            .putExtra(NewsContract.NewsSourceEntry._ID, mCursor.getString(COL_NEWS_SOURCE_ID));
-//
-//                    startActivity(intent);
                 }
             }
         });
@@ -95,7 +90,7 @@ public class MainActivityFragment extends Fragment {
 
     @Override
     public void onResume() {
-        mCursor = NewsContract.NewsSourceEntry.getAllRssSources(getActivity());
+        mCursor = NewsContract.NewsSourceEntry.getAllActiveRssSources(getActivity());
         updateSourceList();
 //        String methodName = new Object(){}.getClass().getEnclosingMethod().getName();
 //        Log.d(TAG, methodName);
@@ -119,11 +114,11 @@ public class MainActivityFragment extends Fragment {
 
             int count = 0;
             do {
-                Log.v("aaa", "isUse: " + String.valueOf(mCursor.getInt(useColumn)));
-                if(mCursor.getInt(useColumn) == 1){
+//                Log.v("aaa", "isUse: " + String.valueOf(mCursor.getInt(useColumn)));
+//                if(mCursor.getInt(useColumn) == 1){
                     titles.add(mCursor.getString(nameColumn));
                     urls.add(mCursor.getString(phoneColumn));
-                }
+//                }
                 ++count;
             } while (mCursor.moveToNext());
 

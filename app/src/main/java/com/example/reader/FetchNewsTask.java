@@ -151,12 +151,10 @@ public class FetchNewsTask extends AsyncTask<String, Void, Cursor>{
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 switch (eventType){
                     case XmlPullParser.START_DOCUMENT:{
-                        Log.d("AsyncTask", "start document");
                         break;
                     }
                     case XmlPullParser.START_TAG:{
                         data = xmlPullParser.getName();
-                        Log.d("AsyncTask", "Start tag "+ data);
 
                         Long now = System.currentTimeMillis();
                         if(data.equals("item")){
@@ -171,7 +169,6 @@ public class FetchNewsTask extends AsyncTask<String, Void, Cursor>{
                     }
                     case XmlPullParser.END_TAG:{
                         data = xmlPullParser.getName();
-                        Log.d("AsyncTask", "End tag "+ data);
                         if(data.equals("item")){
                             itemFlg = 0;
                             list.add(item);
@@ -180,21 +177,17 @@ public class FetchNewsTask extends AsyncTask<String, Void, Cursor>{
                     }
                     case XmlPullParser.TEXT:{
                         data = xmlPullParser.getText();
-                        Log.d("AsyncTask", "Text "+ data);
 
                         if(itemFlg == 1){
                             if(fieldName.equals("title")){
-                                Log.d("AsyncTask", "title = "+ data);
                                 item.put(NewsContract.NewsEntry.COLUMN_TITLE, data);
                                 fieldName = "";
                             }
                             if(fieldName.equals("description")){
-                                Log.d("AsyncTask", "description = "+ data);
                                 item.put(NewsContract.NewsEntry.COLUMN_DESCRIPTION, data);
                                 fieldName = "";
                             }
                             if(fieldName.equals("link")){
-                                Log.d("AsyncTask", "link = "+ data);
                                 item.put(NewsContract.NewsEntry.COLUMN_LINK, data);
                                 fieldName = "";
                             }

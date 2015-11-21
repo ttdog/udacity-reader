@@ -102,5 +102,14 @@ public class NewsContract {
                     NewsContract.NewsSourceEntry._ID + " ASC"
             );
         }
+        public static Cursor getAllActiveRssSources(Context context){
+            return context.getContentResolver().query(
+                    NewsContract.NewsSourceEntry.CONTENT_URI,
+                    null,
+                    NewsContract.NewsSourceEntry.COLUMN_USE + " = ?",
+                    new String[]{"1"},
+                    NewsContract.NewsSourceEntry._ID + " ASC"
+            );
+        }
     }
 }

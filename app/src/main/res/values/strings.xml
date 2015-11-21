@@ -68,4 +68,5 @@
     <string name="pref_location_default">94043</string>
     <string name="pref_other_rss_label">Select Added RSS feeds</string>
     <string name="title_activity_web_view">WebViewActivity</string>
+    <string name="toast_message_must_check_1">You must check at least once.</string>
 </resources>
