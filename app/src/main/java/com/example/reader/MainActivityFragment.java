@@ -3,6 +3,7 @@ package com.example.reader;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -60,7 +61,14 @@ public class MainActivityFragment extends Fragment {
 //                NewsContract.NewsSourceEntry._ID + " ASC"
 //        );
 
-        mCursor = NewsContract.NewsSourceEntry.getAllActiveRssSources(getActivity());
+//        Thread th = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                mCursor = NewsContract.NewsSourceEntry.getAllActiveRssSources(getActivity());
+//            }
+//        });
+//        th.start();
+//        mCursor = NewsContract.NewsSourceEntry.getAllActiveRssSources(getActivity());
 
 
 //        adapter = new NewsSourceAdapter(getActivity(), NewsContract.NewsSourceEntry.sourceTitles, NewsContract.NewsSourceEntry.sourceUrls);
@@ -90,8 +98,13 @@ public class MainActivityFragment extends Fragment {
 
     @Override
     public void onResume() {
-        mCursor = NewsContract.NewsSourceEntry.getAllActiveRssSources(getActivity());
-        updateSourceList();
+        Log.v("aaa", "resume");
+//        mCursor = NewsContract.NewsSourceEntry.getAllActiveRssSources(getActivity());
+//        updateSourceList();
+
+        LoadListAsyncTask task = new LoadListAsyncTask();
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
 //        String methodName = new Object(){}.getClass().getEnclosingMethod().getName();
 //        Log.d(TAG, methodName);
         super.onResume();
@@ -124,6 +137,19 @@ public class MainActivityFragment extends Fragment {
 
             adapter.setData((String[])titles.toArray(new String[0]), (String[])urls.toArray(new String[0]));
             adapter.notifyDataSetChanged();
+        }
+    }
+
+    private class LoadListAsyncTask extends AsyncTask<Void, Integer, Void>{
+        @Override
+        protected Void doInBackground(Void... params) {
+            mCursor = NewsContract.NewsSourceEntry.getAllActiveRssSources(getActivity());
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            updateSourceList();
         }
     }
 }

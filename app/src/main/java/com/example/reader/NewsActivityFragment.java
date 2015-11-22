@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +25,7 @@ import java.util.Arrays;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class NewsActivityFragment extends Fragment {
+public class NewsActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public interface NewsCallback {
         /**
@@ -43,6 +45,41 @@ public class NewsActivityFragment extends Fragment {
     private Cursor mCursor;
 
     private ListView listView;
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
+        // 非同期で処理を実行するLoaderを生成します.
+        // ここを切り替えてあげるだけで様々な非同期処理に対応できます.
+        if(args != null) {
+            String url = args.getString("url");
+            String sourceId = args.getString("sourceId");
+            Loader<Cursor> loade = new FetchNewsTaskLoader(getActivity(), adapter, url, sourceId);
+            loade.forceLoad();
+
+            return loade;
+        }
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> arg0, Cursor arg1) {
+        if(arg1 != null && arg1.getCount() > 0){
+            adapter.changeCursor(arg1);
+//            adapter.notifyAll();
+        }
+//
+//        // 非同期処理が終了したら呼ばれます.
+//        // 今回はDownloadが完了した画像をImageViewに表示します.
+//        ImageView imageView = (ImageView)findViewById(R.id.imageview);
+//        Drawable iconImage = new BitmapDrawable(getResources(), bmp);
+//        imageView.setImageDrawable(iconImage);
+//        imageView.invalidate();
+    }
+    @Override
+    public void onLoaderReset(Loader<Cursor> arg0) {
+
+    }
 
     public void setDatas(String url, String title, long sourceId){
         mUrl = url;
@@ -112,7 +149,8 @@ public class NewsActivityFragment extends Fragment {
     private void setNews(){
         Log.v("aaa", "url: " + mUrl + ", title: " + mTitle + ", id: " + mNewsSourceId);
 
-        mCursor = getActivity().getContentResolver().query(NewsContract.NewsEntry.CONTENT_WITH_SOURCE_URI.buildUpon().appendPath(String.valueOf(mNewsSourceId)).build(), null, null, null, null);
+        (new LoadDBAsyncTask()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//        mCursor = getActivity().getContentResolver().query(NewsContract.NewsEntry.CONTENT_WITH_SOURCE_URI.buildUpon().appendPath(String.valueOf(mNewsSourceId)).build(), null, null, null, null);
 Log.v("aaa", "count :" +getActivity().toString());
         adapter = new NewsAdapter(getActivity(), mCursor, 1);
 //        ListView listView = (ListView)getView().findViewById(R.id.listview_news_list);
@@ -144,7 +182,31 @@ Log.v("aaa", "count :" +getActivity().toString());
 
     private void updateNews(){
         Log.v("aaa", "updateTask");
-        FetchNewsTask fetchTask = new FetchNewsTask(getActivity(), adapter);
-        fetchTask.execute(mUrl, String.valueOf(mNewsSourceId));
+//        FetchNewsTask fetchTask = new FetchNewsTask(getActivity(), adapter);
+//        fetchTask.execute(mUrl, String.valueOf(mNewsSourceId));
+        Bundle args = new Bundle();
+        args.putString("url", mUrl);
+        args.putString("sourceId", String.valueOf(mNewsSourceId));
+        getActivity().getSupportLoaderManager().initLoader(0, args, this);
+    }
+
+    private class LoadDBAsyncTask extends AsyncTask<Void, Void, Void>{
+        @Override
+        protected Void doInBackground(Void... params) {
+            mCursor = getActivity().getContentResolver().query(NewsContract.NewsEntry.CONTENT_WITH_SOURCE_URI.buildUpon().appendPath(String.valueOf(mNewsSourceId)).build(), null, null, null, null);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            adapter.changeCursor(mCursor);
+//            adapter = new NewsAdapter(getActivity(), mCursor, 1);
+//        ListView listView = (ListView)getView().findViewById(R.id.listview_news_list);
+
+//            listView.setAdapter(adapter);
+            Log.v("aaa", "owata");
+            adapter.notifyDataSetChanged();
+        }
     }
 }

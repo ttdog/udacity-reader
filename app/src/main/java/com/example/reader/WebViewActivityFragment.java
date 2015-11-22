@@ -1,7 +1,9 @@
 package com.example.reader;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -42,6 +44,19 @@ public class WebViewActivityFragment extends Fragment {
 
         mBackButton = (FloatingActionButton)rootView.findViewById(R.id.fab_back);
         mBackButton.setEnabled(false);
+
+//        mBackButton.setBackgroundTintList(new ColorStateList(
+//                new int[][] {
+//                        new int[]{ android.R.attr.state_enabled },
+////                        new int[]{ -android.R.attr.state_enabled },
+//                },
+//                new int[] {
+//                        Color.argb(0xff, 0xff, 0xff, 0xff),
+////                        Color.argb(0xff,0x8f,0x8f,0x8f),
+//                }
+//        ));
+
+
         mNextButton = (FloatingActionButton)rootView.findViewById(R.id.fab_next);
         mNextButton.setEnabled(false);
 
@@ -79,16 +94,11 @@ public class WebViewActivityFragment extends Fragment {
         @Override
         public void onPageStarted(WebView aView, String aUrl, Bitmap aFavicon) {
             super.onPageStarted(aView, aUrl, aFavicon);
-
-            Log.v("aaa", "start :"+ mWebView.canGoBack());
-
         }
 
         @Override
         public void onPageFinished(WebView aView, String aUrl) {
             super.onPageFinished(aView, aUrl);
-            Log.v("aaa", "finish");
-
             if(aView.canGoBack()){
                 mBackButton.setEnabled(true);
             }

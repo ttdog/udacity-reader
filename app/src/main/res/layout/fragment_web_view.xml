@@ -20,7 +20,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_dialog_email" />
+        android:src="@drawable/back" />
+
 
     <android.support.design.widget.FloatingActionButton android:id="@+id/fab_next"
         android:layout_width="wrap_content"
@@ -28,5 +29,9 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_dialog_email" />
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:fromDegrees="180"
+        android:toDegrees="180"
+        android:src="@drawable/forward" />
 </RelativeLayout>
